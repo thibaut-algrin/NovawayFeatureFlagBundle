@@ -48,6 +48,11 @@ final class FeatureFlagExtensionTest extends TestCase
         yield 'non existing feature' => ['bar', false];
     }
 
+    public function testShouldValidateName(): void
+    {
+        static::assertSame('feature_flag_extension', $this->extension->getName());
+    }
+
     private function createChainedFeatureManager(): ChainedFeatureManager
     {
         $featureManager = $this->createMock(FeatureManager::class);

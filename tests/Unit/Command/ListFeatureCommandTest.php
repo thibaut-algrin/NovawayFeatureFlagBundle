@@ -11,6 +11,7 @@ declare(strict_types=1);
 
 namespace Novaway\Bundle\FeatureFlagBundle\Tests\Unit\Command;
 
+use Novaway\Bundle\FeatureFlagBundle\Checker\ExpressionLanguageChecker;
 use Novaway\Bundle\FeatureFlagBundle\Command\ListFeatureCommand;
 use Novaway\Bundle\FeatureFlagBundle\Manager\ChainedFeatureManager;
 use Novaway\Bundle\FeatureFlagBundle\Manager\DefaultFeatureManager;
@@ -52,7 +53,14 @@ CSV,
                             'feature2' => [
                                 'name' => 'feature2',
                                 'enabled' => false,
+                                'expression' => 'is_granted(\'ROLE_ADMIN\')',
                                 'description' => 'Feature 2 description',
+                            ],
+                            'feature3' => [
+                                'name' => 'feature3',
+                                'enabled' => true,
+                                'expression' => 'is_granted(\'ROLE_ADMIN\')',
+                                'description' => 'Feature 3 description',
                             ],
                         ],
                     ],
@@ -60,10 +68,10 @@ CSV,
                 'manager2' => [
                     'options' => [
                         'features' => [
-                            'feature3' => [
-                                'name' => 'feature3',
+                            'feature4' => [
+                                'name' => 'feature4',
                                 'enabled' => true,
-                                'description' => 'Feature 3 description',
+                                'description' => 'Feature 4 description',
                             ],
                         ],
                     ],
@@ -80,6 +88,7 @@ manager1
 +----------+---------+-----------------------+
 | feature1 | Yes     | Feature 1 description |
 | feature2 | No      | Feature 2 description |
+| feature3 | Yes     | Feature 3 description |
 +----------+---------+-----------------------+
 
 manager2
@@ -88,7 +97,7 @@ manager2
 +----------+---------+-----------------------+
 | Name     | Enabled | Description           |
 +----------+---------+-----------------------+
-| feature3 | Yes     | Feature 3 description |
+| feature4 | Yes     | Feature 4 description |
 +----------+---------+-----------------------+
 
 OUTPUT,
@@ -104,13 +113,18 @@ OUTPUT,
             "key": "feature2",
             "enabled": false,
             "description": "Feature 2 description"
-        }
-    },
-    "manager2": {
+        },
         "feature3": {
             "key": "feature3",
             "enabled": true,
             "description": "Feature 3 description"
+        }
+    },
+    "manager2": {
+        "feature4": {
+            "key": "feature4",
+            "enabled": true,
+            "description": "Feature 4 description"
         }
     }
 }
@@ -120,7 +134,8 @@ JSON,
 Manager,Name,Enabled,Description
 manager1,feature1,1,"Feature 1 description"
 manager1,feature2,,"Feature 2 description"
-manager2,feature3,1,"Feature 3 description"
+manager1,feature3,1,"Feature 3 description"
+manager2,feature4,1,"Feature 4 description"
 
 CSV,
             ],
@@ -162,7 +177,18 @@ OUTPUT, $commandTester->getDisplay());
     {
         $managers = [];
         foreach ($managersDefinition as $managerName => $featuresDefinition) {
-            $managers[] = new DefaultFeatureManager($managerName, new ArrayStorage($featuresDefinition['options']));
+            $elc = $this->createMock(ExpressionLanguageChecker::class);
+            $elc
+                ->expects($this->exactly(empty($featuresDefinition['expression']) ? 0 : 1))
+                ->method('isGranted')
+                ->willReturn(false)
+            ;
+
+            $managers[] = new DefaultFeatureManager(
+                $managerName,
+                new ArrayStorage($featuresDefinition['options']),
+                $elc
+            );
         }
 
         $command = new ListFeatureCommand(new ChainedFeatureManager($managers));

@@ -17,6 +17,11 @@ interface Feature
     public function getKey(): string;
 
     /**
+     * Get expression
+     */
+    public function getExpression(): ?string;
+
+    /**
      * Get description
      */
     public function getDescription(): string;

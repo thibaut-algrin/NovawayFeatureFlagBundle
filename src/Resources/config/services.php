@@ -9,6 +9,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
+use Novaway\Bundle\FeatureFlagBundle\Checker\ExpressionLanguageChecker;
 use Novaway\Bundle\FeatureFlagBundle\Command\ListFeatureCommand;
 use Novaway\Bundle\FeatureFlagBundle\EventListener\ControllerListener;
 use Novaway\Bundle\FeatureFlagBundle\EventListener\FeatureListener;
@@ -25,6 +26,17 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $services = $containerConfigurator->services();
 
     $services->set('novaway_feature_flag.factory.array', ArrayStorageFactory::class);
+
+    $services->set('novaway_feature_flag.checker.expression_language', ExpressionLanguageChecker::class)
+        ->args([
+            service('security.expression_language')->nullOnInvalid(),
+            service('security.authentication.trust_resolver')->nullOnInvalid(),
+            service('security.role_hierarchy')->nullOnInvalid(),
+            service('security.token_storage')->nullOnInvalid(),
+            service('security.authorization_checker')->nullOnInvalid(),
+            service('logger')->nullOnInvalid(),
+        ])
+    ;
 
     $services->instanceof(FeatureManager::class)
         ->tag('novaway_feature_flag.manager');

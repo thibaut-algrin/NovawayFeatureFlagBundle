@@ -28,10 +28,10 @@ interface FeatureManager
     /**
      * Check if feature is enabled
      */
-    public function isEnabled(string $feature): bool;
+    public function isEnabled(string $key): bool;
 
     /**
      * Check if feature is disabled
      */
-    public function isDisabled(string $feature): bool;
+    public function isDisabled(string $key): bool;
 }

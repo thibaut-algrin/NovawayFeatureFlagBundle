@@ -34,7 +34,7 @@ final class ArrayStorageFactory extends AbstractStorageFactory
     private function transform(array $options): array
     {
         foreach ($options['features'] as $name => $features) {
-            $feature = ['name' => $name, 'enabled' => true, 'condition' => '', 'description' => ''];
+            $feature = ['name' => $name, 'enabled' => true, 'expression' => '', 'description' => ''];
 
             if (\is_bool($features)) {
                 $feature['enabled'] = $features;

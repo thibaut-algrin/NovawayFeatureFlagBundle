@@ -31,14 +31,15 @@ class FeatureCollector extends DataCollector
         foreach ($this->manager->getManagers() as $manager) {
             $features[$manager->getName()] = [];
             foreach ($manager->all() as $feature) {
-                $features[$manager->getName()][] = $feature->toArray();
+                $item = array_merge($feature->toArray(), ['enabled' => $manager->isEnabled($feature->getKey())]);
 
-                if ($feature->isEnabled()) {
+                if ($item['enabled']) {
                     ++$activeFeatureCount;
                 }
-            }
+                ++$totalFeatureCount;
 
-            $totalFeatureCount += count($features[$manager->getName()]);
+                $features[$manager->getName()][] = $item;
+            }
         }
 
         $this->data = [

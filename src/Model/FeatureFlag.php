@@ -17,6 +17,7 @@ final class FeatureFlag implements Feature
     public function __construct(
         private readonly string $key,
         private readonly bool $enabled,
+        private readonly string|null $expression = null,
         private readonly string $description = ''
     ) {
     }
@@ -24,6 +25,11 @@ final class FeatureFlag implements Feature
     public function getKey(): string
     {
         return $this->key;
+    }
+
+    public function getExpression(): ?string
+    {
+        return $this->expression;
     }
 
     public function getDescription(): string

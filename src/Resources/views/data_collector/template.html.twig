@@ -19,7 +19,7 @@
             {% for feature in features %}
                 <div class="sf-toolbar-info-piece">
                     <b>{{ feature.key }}</b>
-                    <span class="sf-toolbar-status">{{ isFeatureEnabled(feature.key) ? '✅' : '❌' }}</span>
+                    <span class="sf-toolbar-status">{{ feature.enabled ? '✅' : '❌' }}</span>
                 </div>
             {% endfor %}
         {% endfor %}
