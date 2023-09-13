@@ -12,6 +12,10 @@
         {
             "name": "Novaway Team",
             "email": "git@novaway.fr"
+        },
+        {
+            "name": "Thibaut ALGRIN",
+            "email": "algrin.thibaut@gmail.com"
         }
     ],
     "require": {
@@ -50,5 +54,10 @@
             "phpstan/extension-installer": true
         },
         "sort-packages": true
+    },
+    "scripts": {
+        "cs": "vendor/bin/php-cs-fixer fix --dry-run --diff",
+        "phpstan": "vendor/bin/phpstan",
+        "tests": "vendor/bin/phpunit"
     }
 }

@@ -65,6 +65,17 @@ final class DefaultControllerTest extends WebTestCase
         static::assertSame(404, static::$client->getResponse()->getStatusCode());
     }
 
+    public function testAttributeFooErrorAction()
+    {
+        $crawler = self::$client->request('GET', '/attribute/error');
+
+        $this->assertSame(500, self::$client->getResponse()->getStatusCode());
+        $this->assertGreaterThan(
+            0,
+            $crawler->filter('html:contains("DefaultController::attributeFooEnabledAction")')->count(),
+        );
+    }
+
     /**
      * @requires PHP >= 8.0
      */

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the NovawayFeatureFlagBundle package.
  * (c) Novaway <https://github.com/novaway/NovawayFeatureFlagBundle>
@@ -9,9 +11,7 @@
 
 namespace Novaway\Bundle\FeatureFlagBundle\Attribute;
 
-use Attribute;
-
-#[Attribute]
+#[\Attribute(flags: \Attribute::TARGET_ALL | \Attribute::IS_REPEATABLE)]
 class Feature
 {
     public function __construct(

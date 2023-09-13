@@ -34,9 +34,14 @@ final class DefaultFeatureManagerTest extends TestCase
         $this->manager = new DefaultFeatureManager('foo', $this->storage);
     }
 
+    public function testShouldValidateName(): void
+    {
+        static::assertSame('foo', $this->manager->getName());
+    }
+
     public function testAllFeaturesCanBeRetrieved(): void
     {
-        static::assertEquals($this->storage->all(), $this->manager->all());
+        static::assertSame($this->storage->all(), $this->manager->all());
     }
 
     public function testIsFeatureEnabled(): void
@@ -45,7 +50,7 @@ final class DefaultFeatureManagerTest extends TestCase
         static::assertFalse($this->manager->isEnabled('feature_2'));
     }
 
-    public function isFeatureDisabled(): void
+    public function testIsFeatureDisabled(): void
     {
         static::assertTrue($this->manager->isDisabled('feature_2'));
         static::assertFalse($this->manager->isDisabled('feature_1'));

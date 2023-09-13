@@ -17,14 +17,9 @@ use Novaway\Bundle\FeatureFlagBundle\Model\FeatureFlag;
 use Novaway\Bundle\FeatureFlagBundle\Storage\ArrayStorage;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @codingStandardsIgnoreFile
- *
- * @SuppressWarnings(PHPMD)
- */
 class ArrayStorageFactoryTest extends TestCase
 {
-    public function testShouldThrowExceptionBecauseFeaturesIsNotDefined()
+    public function testShouldThrowExceptionBecauseFeaturesIsNotDefined(): void
     {
         $this->expectException(ConfigurationException::class);
         $this->expectExceptionMessage('Error while configure storage foo. Verify your configuration at "novaway_feature_flag.storages.foo.options". The required option "features" is missing.');
@@ -33,7 +28,7 @@ class ArrayStorageFactoryTest extends TestCase
         $factory->createStorage('foo');
     }
 
-    public function testShouldCreateStorage()
+    public function testShouldCreateStorage(): void
     {
         $options = [
             'features' => [

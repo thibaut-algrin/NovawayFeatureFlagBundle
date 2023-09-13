@@ -13,8 +13,8 @@ namespace Novaway\Bundle\FeatureFlagBundle\Tests\Unit\Command;
 
 use Novaway\Bundle\FeatureFlagBundle\Command\ListFeatureCommand;
 use Novaway\Bundle\FeatureFlagBundle\Manager\ChainedFeatureManager;
-use Novaway\Bundle\FeatureFlagBundle\Manager\DefaultFeatureManager;
-use Novaway\Bundle\FeatureFlagBundle\Storage\ArrayStorage;
+use Novaway\Bundle\FeatureFlagBundle\Manager\FeatureManager;
+use Novaway\Bundle\FeatureFlagBundle\Model\FeatureFlag;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Console\Tester\CommandTester;
@@ -162,7 +162,13 @@ OUTPUT, $commandTester->getDisplay());
     {
         $managers = [];
         foreach ($managersDefinition as $managerName => $featuresDefinition) {
-            $managers[] = new DefaultFeatureManager($managerName, new ArrayStorage($featuresDefinition['options']));
+            $manager = $this->createMock(FeatureManager::class);
+            $manager->expects($this->exactly(\count($featuresDefinition['options']['features']) + 1))->method('getName')->willReturn($managerName);
+            $manager->expects($this->once())->method('all')->willReturn(array_map(function (array $feature) {
+                return new FeatureFlag($feature['name'], $feature['enabled'], $feature['description'] ?? '');
+            }, $featuresDefinition['options']['features']));
+
+            $managers[] = $manager;
         }
 
         $command = new ListFeatureCommand(new ChainedFeatureManager($managers));

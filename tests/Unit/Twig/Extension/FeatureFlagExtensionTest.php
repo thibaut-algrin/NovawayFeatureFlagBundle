@@ -26,6 +26,11 @@ final class FeatureFlagExtensionTest extends TestCase
         $this->extension = new FeatureFlagExtension($this->createChainedFeatureManager());
     }
 
+    public function testShouldValidateName(): void
+    {
+        static::assertSame('feature_flag_extension', $this->extension->getName());
+    }
+
     #[DataProvider('features')]
     public function testIsFeatureEnabledReturnFeatureState(string $feature, bool $isEnabled): void
     {
